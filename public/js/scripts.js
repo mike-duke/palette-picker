@@ -21,9 +21,31 @@ const handleNewPalette = (event) => {
   });
 }
 
+const prependProjectCard = (project) => {
+  const card = document.createElement('article');
+  
+  card.innerHTML = `
+    <article class="project-card">
+      <h3>${project.name}</h3>
+    </article>
+  `
+  document.querySelector('.project-section').prepend(card);
+}
+
+const fetchProjects = () => {
+  fetch('/api/v1/projects')
+    .then((response) => response.json())
+    .then((projects) => projects.forEach((project) => {
+      prependProjectCard(project);
+    }))
+    .catch((error) => console.log(error));
+}
+
 const handleLock = (event) => {
   event.target.classList.toggle('locked');
 }
+
+fetchProjects();
 
 document.querySelector('.new-palette').addEventListener('click', handleNewPalette);
 document.querySelectorAll('.lock-button').forEach((button) => {
