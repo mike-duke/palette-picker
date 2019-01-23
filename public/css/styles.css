@@ -1,16 +1,27 @@
 .color-box {
-  height: 200px;
+  height: 100px;
   width: 200px;
   background: #808080;
+  margin-bottom: 10px;
+}
+
+.hexcode {
+  width: 80px;
 }
 
 .lock-button {
   height: 20px;
   width: 20px;
+  margin-left: 10px;
   background-size: cover;
   background-image: url('open-padlock-silhouette.svg');
 }
 
 .color-box-container {
   display: flex;
+  align-items: center;
+}
+
+.locked {
+  background-image: url('padlock.svg');
 }

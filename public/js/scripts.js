@@ -1,5 +1,3 @@
-const button = document.querySelector('.new-palette');
-
 const generateColor = () => {
   let color = '#'
   const hexCode = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f'];
@@ -15,10 +13,19 @@ const handleNewPalette = (event) => {
   const boxes = document.querySelectorAll('.color-box');
   const hexes = document.querySelectorAll('.hexcode');
   boxes.forEach((box, i) => {
-    const color = generateColor();
-    box.style.background = color;
-    hexes[i].innerText = color;
+    if(!box.nextSibling.nextSibling.classList.contains('locked')) {
+      const color = generateColor();
+      box.style.background = color;
+      hexes[i].innerText = color;
+    }
   });
 }
 
-button.addEventListener('click', handleNewPalette);
+const handleLock = (event) => {
+  event.target.classList.toggle('locked');
+}
+
+document.querySelector('.new-palette').addEventListener('click', handleNewPalette);
+document.querySelectorAll('.lock-button').forEach((button) => {
+  button.addEventListener('click', handleLock);
+});
