@@ -1,8 +1,7 @@
-const button = document.querySelector('.change-color');
-const colorBox = document.querySelector('.color-box1');
+const button = document.querySelector('.new-palette');
 
 const generateColor = () => {
-  let color = ''
+  let color = '#'
   const hexCode = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f'];
   for(let i = 0; i < 6; i++) {
     let randomIndex = Math.floor(Math.random() * hexCode.length);
@@ -12,10 +11,14 @@ const generateColor = () => {
   return color;
 }
 
-const handleClick = (event) => {
-  const color = generateColor();
-  colorBox.style.background = `#${color}`;
-  colorBox.innerText = `#${color}`
+const handleNewPalette = (event) => {
+  const boxes = document.querySelectorAll('.color-box');
+  const hexes = document.querySelectorAll('.hexcode');
+  boxes.forEach((box, i) => {
+    const color = generateColor();
+    box.style.background = color;
+    hexes[i].innerText = color;
+  });
 }
 
-// button.addEventListener('click', handleClick);
+button.addEventListener('click', handleNewPalette);
