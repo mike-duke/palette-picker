@@ -18,4 +18,4 @@ const handleClick = (event) => {
   colorBox.innerText = `#${color}`
 }
 
-button.addEventListener('click', handleClick);
+// button.addEventListener('click', handleClick);

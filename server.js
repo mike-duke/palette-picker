@@ -6,40 +6,118 @@ app.locals.title = 'Palette Picker';
 
 app.use(express.static('public'));
 
+app.locals.projects = [
+  {
+    id: 1, 
+    name: 'Gov.biz'
+  },
+  {
+    id: 2,
+    name: 'Biz.gov'
+  },
+  {
+    id: 3, 
+    name: 'Place.org'
+  },
+  {
+    id: 4,
+    name: 'Org.com'
+  }
+]
+
+app.locals.palettes = [
+  {
+    id: 1,
+    name: 'Autumn Flowers',
+    project_id: 3
+  },
+  {
+    id: 2,
+    name: 'Daisy Mist',
+    project_id: 4
+  },
+  {
+    id: 3,
+    name: 'Spring Insurgent',
+    project_id: 2
+  },
+  {
+    id: 4,
+    name: 'Dark Mode',
+    project_id: 2
+  }
+]
+
 app.get('/api/v1/projects', (request, response) => {
-  // set all projects to a variable
-  // send all projects as a json response
-  // sad path
+  const projects = app.locals.projects;
+  response.status(200).json(projects)
+  // sad path: there are no projects?
+});
+
+app.get('/api/v1/palettes/:id', (request, response) => {
+  const id = parseInt(request.params.id);
+  const foundPalette = app.locals.palettes.find((palette) => {
+    return palette.id === id;
+  });
+
+  if (foundPalette) {
+    response.status(200).json(foundPalette);
+  } else {
+    response.sendStatus(404)
+  }
 });
 
 app.get('/api/v1/projects/:id', (request, response) => {
-  // parse id from the request params
-  // find the project with the matching id
-  // send the matching project as a json response
-  // sad path
+  const id = parseInt(request.params.id);
+  const foundProject = app.locals.projects.find((project) => {
+    return project.id === id;
+  });
+  const filteredPalettes = app.locals.palettes.filter((palette) => {
+    return palette.project_id === id;
+  });
+
+  if(!foundProject) {
+    response.status(404).send('Project ID not found');
+  }
+  
+  if (filteredPalettes.length > 0) {
+    response.status(200).json(filteredPalettes);
+  } else {
+    response.status(404).send('This project does not have any saved palettes');
+  }
 });
 
 app.post('/api/v1/projects', (request, response) => {
-  // create an id
   // assign the body of the request to a variable
-  // push the new project into the database array
+  const id = Math.floor(Math.random() * 10);
+  const { body } = request;
+  // create SQL record with all data to the projects table
+  app.locals.projects.push({...body, id});
+  // make SQL query for the new id?
   // send the new id as a response with a status of 201
-  // sad path
+  response.status(201).send({id});
+  // sad path: project name aready exists
 });
 
-app.put('/api/v1/projects/:id', (request, response) => {
-  // create an id for the palette
-  // assign the body of the request to a variable
-  // push the new palette into the palette array of the project with the matching project id
-  // send the new id as a response with a status of 201(?)
-  // sad path
+app.post('/api/v1/palettes', (request, response) => {
+  const id = Math.floor(Math.random() * 10);
+  // assign the request body to a variable
+  console.log(request.body.palette);
+  const { body } = request;
+  // assign the project id to a variable
+  const project_id = body.project_id
+  // create SQL query with all record data to the palettes table
+  // respond with the new id
+  response.status(201).send({id});
+  // sad path: palette name already exists
+  // sad path: check the project_id and project name to see if a palette already exists for that project
 });
 
-app.delete('/api/v1/projects/:id/', (request, response) => {
-  // parse the projectId
-  // filter out the palette by the id on the request and reassign the new array to the project by the project id
-  // return a status code of OK
-  // sad path
+app.delete('/api/v1/palettes/:id/', (request, response) => {
+  const id = parseInt(request.params.id);
+  // DELETE palette based on SQL query with id
+  response.sendStatus(200);
+  // sad path: id not found
 });
 
 app.listen(app.get('port'), () => {

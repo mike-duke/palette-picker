@@ -1,5 +1,16 @@
-.color-box1 {
+.color-box {
   height: 200px;
   width: 200px;
   background: #808080;
+}
+
+.lock-button {
+  height: 20px;
+  width: 20px;
+  background-size: cover;
+  background-image: url('open-padlock-silhouette.svg');
+}
+
+.color-box-container {
+  display: flex;
 }
