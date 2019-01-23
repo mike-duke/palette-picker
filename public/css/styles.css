@@ -1,3 +1,48 @@
+* {
+  font-family: 'Helvetica', sans-serif;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  font-size: 3rem;
+  transform: rotate(-90deg);
+  margin: 0;
+  height: 100px;
+}
+
+.new-palette {
+  height: 100px;
+  width: 200px;
+  margin: 0 0 20px 50px;
+  box-shadow: 5px 5px 5px #000;
+}
+
+.new-palette:hover {
+  background: linear-gradient(#e66465, #9198e5);
+}
+
+#project-select {
+  display: block;
+}
+
+.new-project-container {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.palette-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .color-box {
   height: 100px;
   width: 200px;
@@ -21,6 +66,17 @@
 .color-box-container {
   display: flex;
   align-items: center;
+}
+
+.project-section {
+  height: 100vh;
+  overflow: scroll;
+}
+
+.project-card {
+  width: 200px;
+  height: 200px;
+  background: chartreuse;
 }
 
 .locked {
