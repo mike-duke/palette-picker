@@ -51,9 +51,14 @@ app.locals.palettes = [
 ]
 
 app.get('/api/v1/projects', (request, response) => {
-  const projects = app.locals.projects;
+  const { projects } = app.locals;
   response.status(200).json(projects)
   // sad path: there are no projects?
+});
+
+app.get('/api/v1/palettes', (request, response) => {
+  const { palettes } = app.locals;
+  response.status(200).json(palettes);
 });
 
 app.get('/api/v1/palettes/:id', (request, response) => {
@@ -103,12 +108,9 @@ app.post('/api/v1/projects', (request, response) => {
 
 app.post('/api/v1/palettes', (request, response) => {
   const id = Math.floor(Math.random() * 10);
-  // assign the request body to a variable
-  console.log(request.body.palette);
   const { body } = request;
-  // assign the project id to a variable
-  const project_id = body.project_id
   // create SQL query with all record data to the palettes table
+  app.locals.palettes.push({...body, id})
   // respond with the new id
   response.status(201).send({id});
   // sad path: palette name already exists
