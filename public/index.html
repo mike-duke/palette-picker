@@ -11,12 +11,12 @@
   <main>
     <section class="palette-section">
       <button class="new-palette">Generate New Palette</button>
-      <form class="new-project-container">
+      <form class="new-palette-container">
         <select name="project-select" id="project-select">
           <option value="">Select a project</option>
         </select>
         <input type="text" class="new-palette-input" placeholder="Palette Name">
-        <button class="new-project-button">Save</button>
+        <button class="new-palette-button">Save</button>
       </form>
       <article class="color-box-container">
         <p class="hexcode">#808080</p>
@@ -48,7 +48,12 @@
     <h1>Palette Picker</h1>
 
     <section class="project-section">
-      
+      <h2>Projects</h2>
+      <form class="new-project-form">
+        <input type="text" class="new-project-input" placeholder="New Project Name">
+        <button class="new-project-button">Save</button>
+      </form>
+      <div class="project-container"></div>
     </section>
   </main>
 </body>

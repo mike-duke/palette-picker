@@ -29,7 +29,7 @@ const prependProjectCard = (project) => {
       <h3>${project.name}</h3>
     </article>
   `
-  document.querySelector('.project-section').prepend(card);
+  document.querySelector('.project-container').prepend(card);
 }
 
 const fetchProjects = () => {

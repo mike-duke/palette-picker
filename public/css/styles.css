@@ -17,6 +17,10 @@ h1 {
   height: 100px;
 }
 
+h2 {
+  font-size: 2.5rem;
+}
+
 .new-palette {
   height: 100px;
   width: 200px;
@@ -32,7 +36,7 @@ h1 {
   display: block;
 }
 
-.new-project-container {
+.new-palette-container {
   display: flex;
   margin-bottom: 20px;
 }
@@ -68,9 +72,9 @@ h1 {
   align-items: center;
 }
 
-.project-section {
-  height: 100vh;
+.project-container {
   overflow: scroll;
+  height: 88vh;
 }
 
 .project-card {
