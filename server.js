@@ -103,7 +103,7 @@ app.post('/api/v1/projects', (request, response) => {
   // make SQL query for the new id?
   // send the new id as a response with a status of 201
   response.status(201).send({id});
-  // sad path: project name aready exists
+  // sad path: project name aready exists, bad body: 422
 });
 
 app.post('/api/v1/palettes', (request, response) => {
