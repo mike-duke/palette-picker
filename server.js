@@ -69,20 +69,24 @@ app.post('/api/v1/projects', (request, response) => {
 });
 
 app.post('/api/v1/palettes', (request, response) => {
-  const id = Math.floor(Math.random() * 10);
   const { body } = request;
-  // create SQL query with all record data to the palettes table
-  app.locals.palettes.push({...body, id})
-  // respond with the new id
-  response.status(201).send({id});
+  database('palettes').insert(body, 'id')
+    .then((body) => {
+      response.status(201).json({id: body[0]});
+    })
+    .catch((error) => {
+      response.status(500).json({error})
+    })
   // sad path: palette name already exists
   // sad path: check the project_id and project name to see if a palette already exists for that project
 });
 
 app.delete('/api/v1/palettes/:id/', (request, response) => {
   const id = parseInt(request.params.id);
-  // DELETE palette based on SQL query with id
-  response.sendStatus(200);
+  database('palettes').where('id', id).del()
+    .then(() => {
+      response.sendStatus(200);
+    })
   // sad path: id not found
 });
 
