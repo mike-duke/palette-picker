@@ -14,71 +14,111 @@ app.use(express.static('public'));
 app.get('/api/v1/projects', (request, response) => {
   database('projects').select()
     .then((projects) => {
-      response.status(200).json(projects)
+      if (projects.length) {
+        response.status(200).json(projects);
+      } else {
+        response.status(404).send('There are no projects stored');
+      }
     })
     .catch((error) => {
       response.status(500).json({error});
     })
-  // sad path: there are no projects?
 });
 
 app.get('/api/v1/palettes', (request, response) => {
   database('palettes').select()
     .then((palettes) => {
-      response.status(200).json(palettes);
+      if (palettes.length) {
+        response.status(200).json(palettes);
+      } else {
+        response.status(404).send('There are no palettes stored');
+      }
     })
     .catch((error) => {
       response.status(500).json({error});
-    })
+    });
 });
 
 app.get('/api/v1/palettes/:id', (request, response) => {
   const id = parseInt(request.params.id);
   database('palettes').where('id', id)
     .then((palette) => {
-      response.status(200).json({palette})
+      if (Object.keys(palette).length) {
+        response.status(200).json({palette})
+      } else {
+        response.status(404).send('There is not a palette with that id');
+      }
     })
     .catch((error) => {
-      response.status(500).json({error})
-    })
+      response.status(500).json({error});
+    });
 });
 
 app.get('/api/v1/projects/:id/palettes', (request, response) => {
   const id = parseInt(request.params.id);
   database('palettes').where('project_id', id)
     .then((palettes) => {
-      response.status(200).json({palettes})
+      if (palettes.length) {
+        response.status(200).json({palettes})
+      } else {
+        response.staus(404).send('There are no palettes for this project or the id does not match');
+      }
     })
     .catch((error) => {
       response.status(500).json({error})
-    })
-
-    // sad path: how to deal with projects that have no palettes?
+    });
 });
 
 app.post('/api/v1/projects', (request, response) => {
   const { body } = request;
-  database('projects').insert(body, 'id')
-    .then((body) => {
-      response.status(201).json({id: body[0]});
-    })
-    .catch((error) => {
-      response.status(500).json({error})
-    })
-  // sad path: project name aready exists, bad body: 422
+  if (Object.keys(body).length) {
+    database('projects').select('name')
+      .then((projectNames) => {
+        const names = projectNames.map((project) => {
+          return project.name;
+        });
+
+        if (names.includes(body.name)) {
+          response.status(409).send('Please choose a unique project name');
+        } else {
+          database('projects').insert(body, 'id')
+            .then((body) => {
+              response.status(201).json({id: body[0]});
+            })
+        }
+      })
+      .catch((error) => {
+        response.status(500).json({error})
+      });
+  } else {
+    response.status(422).send('Please include project information');
+  }
 });
 
 app.post('/api/v1/palettes', (request, response) => {
   const { body } = request;
-  database('palettes').insert(body, 'id')
-    .then((body) => {
-      response.status(201).json({id: body[0]});
-    })
-    .catch((error) => {
-      response.status(500).json({error})
-    })
-  // sad path: palette name already exists
-  // sad path: check the project_id and project name to see if a palette already exists for that project
+  if (Object.keys(body).length) {
+    database('palettes').select('name')
+      .then((paletteNames) => {
+        const names = paletteNames.map((palette) => {
+          return palette.name;
+        });
+
+        if (names.includes(body.name)) {
+          response.status(409).send('Please choose a unique palette name')
+        } else {
+          database('palettes').insert(body, 'id')
+            .then((body) => {
+              response.status(201).json({id: body[0]});
+            })
+        }
+      })
+      .catch((error) => {
+        response.status(500).json({error});
+      })
+  } else {
+    response.status(422).send('Please include palette information');
+  }
 });
 
 app.delete('/api/v1/palettes/:id/', (request, response) => {
