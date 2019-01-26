@@ -43,11 +43,11 @@ app.get('/api/v1/palettes/:id', (request, response) => {
     })
 });
 
-app.get('/api/v1/projects/:id', (request, response) => {
+app.get('/api/v1/projects/:id/palettes', (request, response) => {
   const id = parseInt(request.params.id);
-  database('projects').where('id', id)
-    .then((project) => {
-      response.status(200).json({project})
+  database('palettes').where('project_id', id)
+    .then((palettes) => {
+      response.status(200).json({palettes})
     })
     .catch((error) => {
       response.status(500).json({error})
