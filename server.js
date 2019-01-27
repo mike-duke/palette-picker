@@ -15,28 +15,24 @@ app.get('/api/v1/projects', (request, response) => {
   database('projects').select()
     .then((projects) => {
       if (projects.length) {
-        response.status(200).json(projects);
+        response.status(200).json({projects});
       } else {
-        response.status(404).send('There are no projects stored');
+        response.status(404).send('No projects stored');
       }
     })
-    .catch((error) => {
-      response.status(500).json({error});
-    })
+    .catch(error => response.status(500).json({error}));
 });
 
 app.get('/api/v1/palettes', (request, response) => {
   database('palettes').select()
     .then((palettes) => {
       if (palettes.length) {
-        response.status(200).json(palettes);
+        response.status(200).json({palettes});
       } else {
-        response.status(404).send('There are no palettes stored');
+        response.status(404).send('No palettes stored');
       }
     })
-    .catch((error) => {
-      response.status(500).json({error});
-    });
+    .catch(error => response.status(500).json({error}));
 });
 
 app.get('/api/v1/palettes/:id', (request, response) => {
@@ -46,12 +42,10 @@ app.get('/api/v1/palettes/:id', (request, response) => {
       if (Object.keys(palette).length) {
         response.status(200).json({palette})
       } else {
-        response.status(404).send('There is not a palette with that id');
+        response.status(404).send('No palettes match that id');
       }
     })
-    .catch((error) => {
-      response.status(500).json({error});
-    });
+    .catch(error => response.status(500).json({error}));
 });
 
 app.get('/api/v1/projects/:id/palettes', (request, response) => {
@@ -61,12 +55,10 @@ app.get('/api/v1/projects/:id/palettes', (request, response) => {
       if (palettes.length) {
         response.status(200).json({palettes})
       } else {
-        response.staus(404).send('There are no palettes for this project or the id does not match');
+        response.staus(404).send('Project has no palettes or id does not match');
       }
     })
-    .catch((error) => {
-      response.status(500).json({error})
-    });
+    .catch(error => response.status(500).json({error}));
 });
 
 app.post('/api/v1/projects', (request, response) => {
@@ -74,22 +66,16 @@ app.post('/api/v1/projects', (request, response) => {
   if (Object.keys(body).length) {
     database('projects').select('name')
       .then((projectNames) => {
-        const names = projectNames.map((project) => {
-          return project.name;
-        });
+        const names = projectNames.map(project => project.name);
 
         if (names.includes(body.name)) {
           response.status(409).send('Please choose a unique project name');
         } else {
           database('projects').insert(body, 'id')
-            .then((body) => {
-              response.status(201).json({id: body[0]});
-            })
+            .then(body => response.status(201).json({id: body[0]}))
         }
       })
-      .catch((error) => {
-        response.status(500).json({error})
-      });
+      .catch(error => response.status(500).json({error}));
   } else {
     response.status(422).send('Please include project information');
   }
@@ -100,22 +86,16 @@ app.post('/api/v1/palettes', (request, response) => {
   if (Object.keys(body).length) {
     database('palettes').select('name')
       .then((paletteNames) => {
-        const names = paletteNames.map((palette) => {
-          return palette.name;
-        });
+        const names = paletteNames.map(palette => palette.name);
 
         if (names.includes(body.name)) {
           response.status(409).send('Please choose a unique palette name')
         } else {
           database('palettes').insert(body, 'id')
-            .then((body) => {
-              response.status(201).json({id: body[0]});
-            })
+            .then(body => response.status(201).json({id: body[0]}))
         }
       })
-      .catch((error) => {
-        response.status(500).json({error});
-      })
+      .catch(error => response.status(500).json({error}))
   } else {
     response.status(422).send('Please include palette information');
   }
@@ -125,22 +105,16 @@ app.delete('/api/v1/palettes/:id/', (request, response) => {
   const id = parseInt(request.params.id);
   database('palettes').select('id')
     .then((ids) => {
-      const paletteIds = ids.map((id) => {
-        return id.id;
-      });
+      const paletteIds = ids.map(id => id.id);
 
       if(paletteIds.includes(id)) {
         database('palettes').where('id', id).del()
-          .then(() => {
-            response.status(200).send('Palette deleted');
-          })
+          .then(() => response.status(200).send('Palette deleted'));
       } else {
         response.status(404).send('Id not found');
       }
     })
-    .catch((error) => {
-      response.status(500).json({error});
-    })
+    .catch(error => response.status(500).json({error}))
 });
 
 app.listen(app.get('port'), () => {
