@@ -24,13 +24,27 @@ const handleNewPalette = (event) => {
 const prependProjectCard = (project) => {
   fetchPalettes(project.id)
     .then(palettes => {
+      if (typeof palettes === "string") {
+        palettes = []
+      }
+
       const card = document.createElement('article');
       card.classList.add('project-card');
-      
+      const paletteCards = palettes.map((palette) => {
+        return (`
+          <div class="palette-card">
+            <p>${palette.name}</p>
+            <div class="palette" style="background: ${palette.color1}"></div>
+            <div class="palette" style="background: ${palette.color2}"></div>
+            <div class="palette" style="background: ${palette.color3}"></div>
+            <div class="palette" style="background: ${palette.color4}"></div>
+            <div class="palette" style="background: ${palette.color5}"></div>
+          </div>
+        `)
+      })
       card.innerHTML = `
       <h3>${project.name}</h3>
-
-      `
+      ${paletteCards}`
       
       document.querySelector('.project-container').prepend(card);
   });
@@ -47,7 +61,9 @@ const fetchProjects = () => {
 
 const fetchPalettes = (projectId) => {
   return fetch(`/api/v1/projects/${projectId}/palettes`)
-    .then(results => results);
+    .then(response => response.json())
+    .then(results => results.palettes)
+    .catch(error => {return []})
 }
 
 const handleLock = (event) => {
