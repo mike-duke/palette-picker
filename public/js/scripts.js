@@ -44,7 +44,8 @@ const prependProjectCard = (project) => {
       })
       card.innerHTML = `
       <h3>${project.name}</h3>
-      ${paletteCards}`
+      ${paletteCards}
+      <hr>`
       
       document.querySelector('.project-container').prepend(card);
   });
