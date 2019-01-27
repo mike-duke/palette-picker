@@ -39,14 +39,17 @@ const prependProjectCard = (project) => {
             <div class="palette" style="background: ${palette.color3}"></div>
             <div class="palette" style="background: ${palette.color4}"></div>
             <div class="palette" style="background: ${palette.color5}"></div>
+            <button class="delete-palette-button">X</button>
           </div>
         `)
-      })
+      });
+      
       card.innerHTML = `
       <h3>${project.name}</h3>
-      ${paletteCards}`
+      ${paletteCards}
+      <hr>`
       
-      document.querySelector('.project-container').prepend(card);
+      document.querySelector('.project-container').append(card);
   });
 }
 
@@ -92,24 +95,34 @@ const saveProject = (event) => {
 
 const savePalette = (event) => {
   event.preventDefault();
-  const paletteName = document.querySelector('.new-palette-input').value;
+  const name = document.querySelector('.new-palette-input').value;
   const colors = [];
   document.querySelectorAll('.hexcode').forEach((element) => {
     colors.push(element.innerText);
   });
-  const projectName = document.querySelector('#project-select').value;
+  const project_id = document.querySelector('#project-select').value;
+
   fetch('/api/v1/palettes', {
     method: 'POST',
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      name: paletteName,
-      colors,
-      projectName
+      name,
+      color1: colors[0],
+      color2: colors[1],
+      color3: colors[2],
+      color4: colors[3],
+      color5: colors[4],
+      project_id
     })
   })
-    .then(response => console.log(response))
+    .then(response => {
+      console.log(response);
+      const cards = document.querySelectorAll('.project-card');
+      cards.forEach(card => card.remove());
+      fetchProjects();
+    })
 }
 
 const populateOptions = () => {
@@ -120,10 +133,10 @@ const populateOptions = () => {
       const option = document.createElement('option');
       option.innerText = 'Select a project';
       select.append(option);
+
       results.projects.forEach((project) => {
-      const option = document.createElement('option');
-        option.setAttribute('value', project.name);
-        option.setAttribute('data-id', project.id);
+        const option = document.createElement('option');
+        option.setAttribute('value', project.id);
         option.innerText = project.name;
         select.append(option);    
       })
