@@ -25,9 +25,9 @@ app.get('/api/v1/projects', (request, response) => {
 
 app.get('/api/v1/palettes', (request, response) => {
   database('palettes').select()
-    .then((palettes) => {
-      if (palettes.length) {
-        response.status(200).json({palettes});
+    .then((projects) => {
+      if (projects.length) {
+        response.status(200).json({projects});
       } else {
         response.status(404).send('No palettes stored');
       }
@@ -55,7 +55,7 @@ app.get('/api/v1/projects/:id/palettes', (request, response) => {
       if (palettes.length) {
         response.status(200).json({palettes})
       } else {
-        response.staus(404).send('Project has no palettes or id does not match');
+        response.status(404).send('Project has no palettes or id does not match');
       }
     })
     .catch(error => response.status(500).json({error}));
