@@ -22,23 +22,48 @@ const handleNewPalette = (event) => {
 }
 
 const prependProjectCard = (project) => {
-  const card = document.createElement('article');
-  
-  card.innerHTML = `
-    <article class="project-card">
+  fetchPalettes(project.id)
+    .then(palettes => {
+      if (typeof palettes === "string") {
+        palettes = []
+      }
+
+      const card = document.createElement('article');
+      card.classList.add('project-card');
+      const paletteCards = palettes.map((palette) => {
+        return (`
+          <div class="palette-card">
+            <p>${palette.name}</p>
+            <div class="palette" style="background: ${palette.color1}"></div>
+            <div class="palette" style="background: ${palette.color2}"></div>
+            <div class="palette" style="background: ${palette.color3}"></div>
+            <div class="palette" style="background: ${palette.color4}"></div>
+            <div class="palette" style="background: ${palette.color5}"></div>
+          </div>
+        `)
+      })
+      card.innerHTML = `
       <h3>${project.name}</h3>
-    </article>
-  `
-  document.querySelector('.project-container').prepend(card);
+      ${paletteCards}`
+      
+      document.querySelector('.project-container').prepend(card);
+  });
 }
 
 const fetchProjects = () => {
   fetch('/api/v1/projects')
     .then(response => response.json())
-    .then(projects => projects.forEach((project) => {
+    .then(results => results.projects.forEach((project) => {
       prependProjectCard(project);
     }))
     .catch(error => console.log(error));
+}
+
+const fetchPalettes = (projectId) => {
+  return fetch(`/api/v1/projects/${projectId}/palettes`)
+    .then(response => response.json())
+    .then(results => results.palettes)
+    .catch(error => {return []})
 }
 
 const handleLock = (event) => {
@@ -55,7 +80,14 @@ const saveProject = (event) => {
     },
     body: JSON.stringify({name: projectName})
   })
-    .then(response => fetchProjects());
+    .then(() => {
+      const cards = document.querySelectorAll('.project-card');
+      const options = document.querySelectorAll('option');
+      cards.forEach(card => card.remove());
+      options.forEach(option => option.remove());
+      fetchProjects();
+      populateOptions();
+    });
 }
 
 const savePalette = (event) => {
@@ -83,13 +115,19 @@ const savePalette = (event) => {
 const populateOptions = () => {
   fetch('/api/v1/projects')
     .then(response => response.json())
-    .then(projects => projects.forEach((project) => {
+    .then(results => {
+      const select = document.querySelector('#project-select');
       const option = document.createElement('option');
-      option.setAttribute('value', project.name);
-      option.setAttribute('data-id', project.id);
-      option.innerText = project.name;
-      document.querySelector('#project-select').append(option);
-    }))
+      option.innerText = 'Select a project';
+      select.append(option);
+      results.projects.forEach((project) => {
+      const option = document.createElement('option');
+        option.setAttribute('value', project.name);
+        option.setAttribute('data-id', project.id);
+        option.innerText = project.name;
+        select.append(option);    
+      })
+    })
 }
 
 fetchProjects();
