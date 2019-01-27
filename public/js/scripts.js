@@ -39,15 +39,17 @@ const prependProjectCard = (project) => {
             <div class="palette" style="background: ${palette.color3}"></div>
             <div class="palette" style="background: ${palette.color4}"></div>
             <div class="palette" style="background: ${palette.color5}"></div>
+            <button class="delete-palette-button">X</button>
           </div>
         `)
-      })
+      });
+      
       card.innerHTML = `
       <h3>${project.name}</h3>
       ${paletteCards}
       <hr>`
       
-      document.querySelector('.project-container').prepend(card);
+      document.querySelector('.project-container').append(card);
   });
 }
 

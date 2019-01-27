@@ -85,14 +85,14 @@ h3 {
 
 .project-container {
   overflow: scroll;
-  /* height: 88vh; */
+  height: 65vh;
   margin-top: 50px;
+  width: 100%;
 }
 
 .project-card {
   width: 300px;
   min-height: 100px;
-  /* background: chartreuse; */
 }
 
 .locked {
