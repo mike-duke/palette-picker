@@ -6,7 +6,7 @@ const database = require('knex')(configuration);
 const app = express();
 app.use(bodyParser.json());
 
-app.set('port', process.env.POST || 3000);
+app.set('port', process.env.PORT || 3000);
 app.locals.title = 'Palette Picker';
 
 app.use(express.static('public'));
