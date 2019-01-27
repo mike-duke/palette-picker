@@ -123,11 +123,24 @@ app.post('/api/v1/palettes', (request, response) => {
 
 app.delete('/api/v1/palettes/:id/', (request, response) => {
   const id = parseInt(request.params.id);
-  database('palettes').where('id', id).del()
-    .then(() => {
-      response.sendStatus(200);
+  database('palettes').select('id')
+    .then((ids) => {
+      const paletteIds = ids.map((id) => {
+        return id.id;
+      });
+
+      if(paletteIds.includes(id)) {
+        database('palettes').where('id', id).del()
+          .then(() => {
+            response.status(200).send('Palette deleted');
+          })
+      } else {
+        response.status(404).send('Id not found');
+      }
     })
-  // sad path: id not found
+    .catch((error) => {
+      response.status(500).json({error});
+    })
 });
 
 app.listen(app.get('port'), () => {
