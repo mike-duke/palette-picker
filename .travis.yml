@@ -1,3 +1,11 @@
 language: node_js
 node_js:
-  - "node"
+- node
+notifications:
+  email: false
+deploy:
+  provider: heroku
+  api_key:
+    secure: aFBNxoUEPrZSXeIo3X8lX/d0olgCIefxiDbuX8f4uqVFEbYy7J80qTYkFnDPnJL8zLPMPYo+Zs15AYBgmu2TjnLci9e63WVsrEfIxC618+XEbmtJrxrxPAx4z7c12542fbIRbepytiXYOerDuPxHitwZv3qqXWNIV0/rWpk2SEGg7wINaOanT04w+PEIh+u0Ag6skTxVKSEtm8k3kPY3sly1+SwFGD8C02u6vXuX/dn3zb0x/S4nkq/T+hM1MK5F/U6Io689+Oaux0JqC2VPcI8ds5r3UPHvkn5b5e4swH+X6YcXyQsuj38tqgYC+oiObh3nU1i40tpJS+qWe2RZTfyoe60IKDaoQuU48AvFtgZFNFM4uw+0dtd6EI0YqLFsDIvMXQ9S2SMKldptvJIcigPUralBHe5mlIsZpyPj3WhwiHJieor/BvigR1TYOw0gKl0p0vyGoNGPu0bGnUmviqXHRxJMNRmQN/Tzx4IftX1WkdhNOeFQo5NjJIYQi08rPlJNSmQKHbCMVWwKODPuSSQ/p5ngTlmgJojdHNACc7/yi/CsFCVuP9GETIcV4jamer1VbManHYFfVMSVIJS3/pPqyjRzMyQW34FBmPc3u2H0CPUHEdtOEqf1LAvkU8q1hGjap155H2jvPvqvgnWJXkUvtIZ5o1/EnXTSspcOfjM=
+  app: duke-palette-picker
+  skip_cleanup: true
