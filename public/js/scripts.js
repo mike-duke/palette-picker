@@ -35,11 +35,11 @@ const prependProjectCard = (project) => {
         return (`
           <div class="palette-card" data-id=${palette.id}>
             <p>${palette.name}</p>
-            <div class="palette" style="background: ${palette.color1}"></div>
-            <div class="palette" style="background: ${palette.color2}"></div>
-            <div class="palette" style="background: ${palette.color3}"></div>
-            <div class="palette" style="background: ${palette.color4}"></div>
-            <div class="palette" style="background: ${palette.color5}"></div>
+            <div class="palette" data-color=${palette.color1} style="background: ${palette.color1}"></div>
+            <div class="palette" data-color=${palette.color2} style="background: ${palette.color2}"></div>
+            <div class="palette" data-color=${palette.color3} style="background: ${palette.color3}"></div>
+            <div class="palette" data-color=${palette.color4} style="background: ${palette.color4}"></div>
+            <div class="palette" data-color=${palette.color5} style="background: ${palette.color5}"></div>
             <button class="delete-palette-button">X</button>
           </div>
         `)
@@ -197,6 +197,15 @@ const handleProjectClick = (event) => {
       getAllProjects();
       populateOptions();
     })
+  } else if (event.target.classList.contains('palette-card')) {
+    let counter = 1;
+    event.target.childNodes.forEach((node ) => {
+      if (node.classList && node.classList.contains('palette')) {
+        document.querySelector(`.box${counter}`).style.background = node.dataset.color;
+        document.querySelector(`.hexcode${counter}`).innerText = node.dataset.color;
+        counter++
+      }
+    });
   }
 }
 
