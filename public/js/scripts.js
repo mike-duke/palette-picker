@@ -30,9 +30,10 @@ const prependProjectCard = (project) => {
 
       const card = document.createElement('article');
       card.classList.add('project-card');
+      card.setAttribute('data-id', project.id)
       const paletteCards = palettes.map((palette) => {
         return (`
-          <div class="palette-card">
+          <div class="palette-card" data-id=${palette.id}>
             <p>${palette.name}</p>
             <div class="palette" style="background: ${palette.color1}"></div>
             <div class="palette" style="background: ${palette.color2}"></div>
@@ -44,17 +45,17 @@ const prependProjectCard = (project) => {
         `)
       });
       
-      card.innerHTML = `
+      card.innerHTML = (`
       <h3>${project.name}</h3>
       ${paletteCards}
-      <hr>`
+      <hr>`);
       
       document.querySelector('.project-container').append(card);
   });
 }
 
 const fetchProjects = () => {
-  fetch('/api/v1/projects')
+  return fetch('/api/v1/projects')
     .then(response => {
       if (response.ok) {
         return response.json()
@@ -62,20 +63,37 @@ const fetchProjects = () => {
         return response = {projects: []}
       }
     })
-    .then(results => {
-      results.projects.forEach((project) => {
-        prependProjectCard(project);
-      })
-      document.querySelector('.new-project-input').value = ''
-    })
+    .then(results => results.projects)
     .catch(error => console.log(error));
 }
 
 const fetchPalettes = (projectId) => {
   return fetch(`/api/v1/projects/${projectId}/palettes`)
-    .then(response => response.json())
+    .then(response => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        return response = {palettes: []}
+      }
+    })
     .then(results => results.palettes)
-    .catch(error => {return []})
+    .catch(error => {
+      console.log(error)
+      return []
+    })
+}
+
+const getAllProjects = () => {
+  fetchProjects()
+    .then(projects => {
+      const sortedProjects = projects.sort((projectA, projectB) => {
+        return projectB.id - projectA.id
+    });
+  
+    sortedProjects.forEach((project) => {
+      prependProjectCard(project);
+    });
+  });
 }
 
 const handleLock = (event) => {
@@ -97,8 +115,10 @@ const saveProject = (event) => {
       const options = document.querySelectorAll('option');
       cards.forEach(card => card.remove());
       options.forEach(option => option.remove());
-      fetchProjects();
+      getAllProjects();
       populateOptions();
+      document.querySelector('.new-project-input').value = '';
+      document.querySelector('.new-project-button').disabled = true;
     });
 }
 
@@ -108,8 +128,12 @@ const savePalette = (event) => {
   const colors = [];
   document.querySelectorAll('.hexcode').forEach((element) => {
     colors.push(element.innerText);
+    // element.innerText = '#808080'
   });
   const project_id = document.querySelector('#project-select').value;
+  // document.querySelectorAll('.color-box').forEach((box) => {
+  //   box.style.background = '#808080'
+  // })
 
   fetch('/api/v1/palettes', {
     method: 'POST',
@@ -129,7 +153,9 @@ const savePalette = (event) => {
     .then(response => {
       const cards = document.querySelectorAll('.project-card');
       cards.forEach(card => card.remove());
-      fetchProjects();
+      getAllProjects();
+      document.querySelector('.new-palette-input').value = '';
+      document.querySelector('.new-palette-button').disabled = true;
     })
 }
 
@@ -154,12 +180,40 @@ const populateOptions = () => {
         option.innerText = project.name;
         select.append(option);    
       })
-      document.querySelector('.new-palette-input').value = '';
     })
 }
 
-fetchProjects();
+const handleProjectClick = (event) => {
+  if(event.target.classList.contains('delete-palette-button')) {
+    const { id } = event.target.closest('.palette-card').dataset
+    fetch(`/api/v1/palettes/${id}`, {
+      method: 'DELETE'
+    })
+    .then(() => {
+      const cards = document.querySelectorAll('.project-card');
+      const options = document.querySelectorAll('option');
+      cards.forEach(card => card.remove());
+      options.forEach(option => option.remove());
+      getAllProjects();
+      populateOptions();
+    })
+  }
+}
+
+const handleButtonDisabled = (event) => {
+  const button = event.target.nextSibling.nextSibling
+  if (event.target.value.length) {
+    button.disabled = false;
+  } else {
+    button.disabled = true;
+  }
+}
+
+getAllProjects();
 populateOptions();
+document.querySelector('.new-palette-input').focus();
+document.querySelector('.new-palette-button').disabled = true;
+document.querySelector('.new-project-button').disabled = true;
 
 document.querySelector('.new-palette').addEventListener('click', handleNewPalette);
 document.querySelectorAll('.lock-button').forEach((button) => {
@@ -167,3 +221,8 @@ document.querySelectorAll('.lock-button').forEach((button) => {
 });
 document.querySelector('.new-project-button').addEventListener('click', saveProject);
 document.querySelector('.new-palette-button').addEventListener('click', savePalette);
+
+document.querySelector('.project-container').addEventListener('click', handleProjectClick);
+document.querySelectorAll('input').forEach((input) => {
+  input.addEventListener('keyup', handleButtonDisabled);
+})
