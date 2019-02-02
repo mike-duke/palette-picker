@@ -127,7 +127,13 @@ const savePalette = (event) => {
 
 const populateOptions = () => {
   fetch('/api/v1/projects')
-    .then(response => response.json())
+    .then(response => {
+      if (response.projects) {
+        response.json()
+      } else {
+        return response = {projects: []}
+      }
+    })
     .then(results => {
       const select = document.querySelector('#project-select');
       const option = document.createElement('option');
