@@ -27,6 +27,10 @@ h3 {
   font-size: 1.5rem;
 }
 
+button:disabled {
+  color: #808080;
+}
+
 .new-palette {
   height: 100px;
   width: 200px;

@@ -22,7 +22,6 @@ const handleNewPalette = (event) => {
 }
 
 const prependProjectCard = (project) => {
-  console.log(project.id)
   fetchPalettes(project.id)
     .then(palettes => {
       if (typeof palettes === "string") {
@@ -118,6 +117,8 @@ const saveProject = (event) => {
       options.forEach(option => option.remove());
       getAllProjects();
       populateOptions();
+      document.querySelector('.new-project-input').value = '';
+      document.querySelector('.new-project-button').disabled = true;
     });
 }
 
@@ -127,8 +128,12 @@ const savePalette = (event) => {
   const colors = [];
   document.querySelectorAll('.hexcode').forEach((element) => {
     colors.push(element.innerText);
+    // element.innerText = '#808080'
   });
   const project_id = document.querySelector('#project-select').value;
+  // document.querySelectorAll('.color-box').forEach((box) => {
+  //   box.style.background = '#808080'
+  // })
 
   fetch('/api/v1/palettes', {
     method: 'POST',
@@ -149,6 +154,8 @@ const savePalette = (event) => {
       const cards = document.querySelectorAll('.project-card');
       cards.forEach(card => card.remove());
       getAllProjects();
+      document.querySelector('.new-palette-input').value = '';
+      document.querySelector('.new-palette-button').disabled = true;
     })
 }
 
@@ -173,7 +180,6 @@ const populateOptions = () => {
         option.innerText = project.name;
         select.append(option);    
       })
-      document.querySelector('.new-palette-input').value = '';
     })
 }
 
@@ -194,8 +200,20 @@ const handleProjectClick = (event) => {
   }
 }
 
+const handleButtonDisabled = (event) => {
+  const button = event.target.nextSibling.nextSibling
+  if (event.target.value.length) {
+    button.disabled = false;
+  } else {
+    button.disabled = true;
+  }
+}
+
 getAllProjects();
 populateOptions();
+document.querySelector('.new-palette-input').focus();
+document.querySelector('.new-palette-button').disabled = true;
+document.querySelector('.new-project-button').disabled = true;
 
 document.querySelector('.new-palette').addEventListener('click', handleNewPalette);
 document.querySelectorAll('.lock-button').forEach((button) => {
@@ -205,3 +223,6 @@ document.querySelector('.new-project-button').addEventListener('click', saveProj
 document.querySelector('.new-palette-button').addEventListener('click', savePalette);
 
 document.querySelector('.project-container').addEventListener('click', handleProjectClick);
+document.querySelectorAll('input').forEach((input) => {
+  input.addEventListener('keyup', handleButtonDisabled);
+})
