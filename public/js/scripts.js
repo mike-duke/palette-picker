@@ -55,7 +55,13 @@ const prependProjectCard = (project) => {
 
 const fetchProjects = () => {
   fetch('/api/v1/projects')
-    .then(response => response.json())
+    .then(response => {
+      if (response.projects) {
+        response.json()
+      } else {
+        return response = {projects: []}
+      }
+    })
     .then(results => results.projects.forEach((project) => {
       prependProjectCard(project);
     }))
