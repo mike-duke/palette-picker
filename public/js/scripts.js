@@ -56,15 +56,18 @@ const prependProjectCard = (project) => {
 const fetchProjects = () => {
   fetch('/api/v1/projects')
     .then(response => {
-      if (response.projects) {
-        response.json()
+      if (response.ok) {
+        return response.json()
       } else {
         return response = {projects: []}
       }
     })
-    .then(results => results.projects.forEach((project) => {
-      prependProjectCard(project);
-    }))
+    .then(results => {
+      results.projects.forEach((project) => {
+        prependProjectCard(project);
+      })
+      document.querySelector('.new-project-input').value = ''
+    })
     .catch(error => console.log(error));
 }
 
@@ -124,7 +127,6 @@ const savePalette = (event) => {
     })
   })
     .then(response => {
-      console.log(response);
       const cards = document.querySelectorAll('.project-card');
       cards.forEach(card => card.remove());
       fetchProjects();
@@ -134,8 +136,8 @@ const savePalette = (event) => {
 const populateOptions = () => {
   fetch('/api/v1/projects')
     .then(response => {
-      if (response.projects) {
-        response.json()
+      if (response.ok) {
+        return response.json()
       } else {
         return response = {projects: []}
       }
@@ -152,6 +154,7 @@ const populateOptions = () => {
         option.innerText = project.name;
         select.append(option);    
       })
+      document.querySelector('.new-palette-input').value = '';
     })
 }
 
