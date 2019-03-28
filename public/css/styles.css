@@ -114,3 +114,16 @@ button:disabled {
   height: 20px;
   margin: 0 2px;
 }
+
+.name-and-delete {
+  display: flex;
+  justify-content: space-between;
+}
+
+.delete-project-button {
+  all: unset;
+  background: url('./waste-bin.svg');
+  background-size: cover;
+  height: 20px;
+  width: 20px;
+}
