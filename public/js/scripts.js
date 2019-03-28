@@ -46,9 +46,13 @@ const prependProjectCard = (project) => {
       });
       
       card.innerHTML = (`
-      <h3>${project.name}</h3>
-      ${paletteCards}
-      <hr>`);
+        <div class="name-and-delete">
+          <h3>${project.name}</h3>
+          <button class="delete-project-button"></button>
+        </div>
+          ${paletteCards}
+        <hr>
+      `);
       
       document.querySelector('.project-container').append(card);
   });
@@ -230,7 +234,6 @@ document.querySelectorAll('.lock-button').forEach((button) => {
 });
 document.querySelector('.new-project-button').addEventListener('click', saveProject);
 document.querySelector('.new-palette-button').addEventListener('click', savePalette);
-
 document.querySelector('.project-container').addEventListener('click', handleProjectClick);
 document.querySelectorAll('input').forEach((input) => {
   input.addEventListener('keyup', handleButtonDisabled);
