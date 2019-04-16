@@ -18,9 +18,9 @@ This was a solo project for the Turing School of Software and Design. I was a st
 
 ### Wireframes
 
-![Wireframe of project]()
+![Wireframe of project](https://github.com/mike-duke/palette-picker/blob/master/public/Screen%20Shot%202019-04-16%20at%2011.20.23%20AM.png)
 
 
 ### Screenshots
 
-![Screenshot of finished project]()
+![Screenshot of finished project](https://github.com/mike-duke/palette-picker/blob/master/public/Screen%20Shot%202019-04-16%20at%2011.20.39%20AM.png)
