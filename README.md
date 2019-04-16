@@ -8,9 +8,18 @@ The app is hosted [here](https://palette-picker-duke.herokuapp.com)
 
 OR, you can install the project from this repository by:
 
-Cloning it down: `git clone git@github.com:mike-duke/palette-picker.git`
-installing dependencies: `npm i`
-and starting the dev server: `npm start`
+Cloning it down: 
+```
+git clone git@github.com:mike-duke/palette-picker.git
+```
+installing dependencies: 
+```
+npm i
+```
+and starting the dev server: 
+```
+npm start
+```
 
 ### The Project
 
